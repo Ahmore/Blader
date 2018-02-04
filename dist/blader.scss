@@ -1,0 +1,71 @@
+/**********************************
+ *	Project		Blader loader     *
+ *  Build 		04 Jan, 2018      *
+ * 	Author		Dariusz Szymczyk  *
+ **********************************/
+
+// Loader name
+$name: "blader";
+
+// Loader dimensions
+$size: 50px;
+
+// Blades color
+$color: white;
+
+// Blades size
+$thickness: 3px;
+
+// Blades style - border style options
+$style: dashed;
+
+// Blades speed
+$duration: .9s;
+
+// Async blades animation
+$async: false;
+
+// Max blades amount
+$max: 4;
+
+.#{$name} {
+    width: $size;
+    height: $size;
+    position: relative;
+
+    .#{$name}-blade {
+        position: absolute;
+        width: $size;
+        height: $size;
+        border-radius: 50%;
+        border-top: $thickness $style $color;
+
+        @for $i from 1 through $max {
+            @for $j from 1 through $i {
+                &:nth-child(#{$j}):nth-last-child(#{$i - $j + 1}) {
+                    transform:
+                            rotateX(120deg)
+                            rotateY(#{(180 / $i) * ($j - 1) + if($i % 2 == 0, (180/$i) / 2, 0)}deg)
+                            if($async, rotateZ(#{(360 / $i) * ($j - 1)}deg), rotateZ(0deg));
+
+                    animation: #{$name}-rotating-#{$j}-#{$i} $duration linear infinite;
+                    @keyframes #{$name}-rotating-#{$j}-#{$i} {
+                        0% {
+                            transform:
+                                    rotateX(120deg)
+                                    rotateY(#{(180 / $i) * ($j - 1) + if($i % 2 == 0, (180/$i) / 2, 0)}deg)
+                                    if($async, rotateZ(#{(360 / $i) * ($j - 1)}deg), rotateZ(0deg))
+                        }
+
+                        100% {
+                            transform:
+                                    rotateX(120deg)
+                                    rotateY(#{(180 / $i) * ($j - 1) + if($i % 2 == 0, (180/$i) / 2, 0)}deg)
+                                    if($async, rotateZ(#{(360 / $i) * ($j - 1) + 360}deg), rotateZ(360deg));
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
